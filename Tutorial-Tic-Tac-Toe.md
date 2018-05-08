@@ -692,29 +692,29 @@ $ eosiocpp -o tic_tac_toe.wast tic_tac_toe.cpp
 ```bash
 $ cleos set contract tic.tac.toe tic_tac_toe
 ```
-Ensure that your wallet is unlocked and you have `tic.tac.toe` key imported. If you are going to upload the contract to another account beside `tic.tac.toe`, replace `tic.tac.toe` with your account name and ensure you have the key for that account in your wallet
+确保您的钱包已解锁，并且您已导入tic.tac.toe密钥。 如果您打算将合约上传至tic.tac.toe旁边的另一个帐户，请将tic.tac.toe替换为您的帐户名称，并确保您的钱包中有该帐户的密钥。
 
-### Play!
-After the deployment and the transaction is confirmed, the contract is already available in the blockchain. You can play with it now!
+### 玩!
+部署和交易确认后，合约已经在区块链中可用。 你现在可以玩了！
 
-#### Create
+#### 创建
 ```bash
 $ cleos push action tic.tac.toe create '{"challenger":"inita", "host":"initb"}' --permission initb@active 
 ```
-#### Move
+#### 移动
 ```bash
 $ cleos push action tic.tac.toe move '{"challenger":"inita", "host":"initb", "by":"initb", "mvt":{"row":0, "column":0} }' --permission initb@active
 $ cleos push action tic.tac.toe move '{"challenger":"inita", "host":"initb", "by":"inita", "mvt":{"row":1, "column":1} }' --permission inita@active
 ```
-#### Restart
+#### 重启
 ```bash
 $ cleos push action tic.tac.toe restart '{"challenger":"inita", "host":"initb", "by":"initb"}' --permission initb@active 
 ```
-#### Close
+#### 关闭
 ```bash
 $ cleos push action tic.tac.toe close '{"challenger":"inita", "host":"initb"}' --permission initb@active
 ```
-#### See the game status
+#### 查看游戏状态
 ```
 $ cleos get table tic.tac.toe initb games
 {
