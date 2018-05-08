@@ -58,8 +58,8 @@ namespace tic_tac_toe {
 }
 ```
 
-#### Games Table
-For this contract, we will need to have a table that stores a list of games. Let's define it:
+#### 游戏表
+对于这个合约，我们需要一个表格来存储一个游戏列表。让我们来定义它：
 ```cpp
 ...
 namespace tic_tac_toe {
@@ -68,11 +68,12 @@ namespace tic_tac_toe {
 }
   
 ```
-- First template parameter  defines the name of the table
-- Second template parameter defines the structure that it stores (will be defined in the next section)
+- 第一个模版参数定义了这个表的名称
+- 第二个模版参数定义了它所要存储的结构(我们将会在下一节中定义它)
 
-#### Game Structure
-Let's define structure for the game. Ensure that this struct definition appears before the table definition in the code.
+#### 游戏结构
+让我们来定义这个游戏的结构。请确保在代码中这个结构定义在表定义之前。
+
 ```cpp
 ...
 namespace tic_tac_toe {
@@ -109,11 +110,12 @@ namespace tic_tac_toe {
    };
 }
 ```
-The primary_key method is required by the above table definition for games. That is how the table knows what field is the lookup key for the table.
+`primary_key`方法对于上面的游戏表格定义是必要的，因为它是这个表知道如何查找这个表的key是哪个字段的。
 
-#### Action Structure
-##### Create
-To create the game, we need host account name and challenger's account name. The EOSLIB_SERIALIZE macro provides serialize and deserialize methods so that actions can be passed back and forth between the contracts and the nodeos system.
+#### 动作结构
+##### 创建游戏
+为了创建这个游戏，我们需要主场账户名和挑战者的账户名。`EOSLIB_SERIALIZE`这个宏定义提供了序列化和反序列化方法，因此动作可以在合约与`nodeos`系统之间来回传递。
+
 ```cpp
 ...
 namespace tic_tac_toe {
@@ -127,8 +129,9 @@ namespace tic_tac_toe {
    ...
 }
 ```
-##### Restart
-To restart the game, we need host account name and challenger's account name to identify the game. Furthermore, we need to specify who wants to restart the game, so we can verify the correct signature is provided.
+##### 重启游戏
+为了重新开始这个游戏，我们需要主场账户名称和挑战者账户名称来唯一标识这个游戏。并且，我们需要指定谁来重新开始这个游戏，因此我们需要验证合约签名是被提供的。
+
 ```cpp
 ...
 namespace tic_tac_toe {
@@ -143,8 +146,9 @@ namespace tic_tac_toe {
    ...
 }
 ```
-##### Close
-To close the game, we need host account name and challenger's account name to identify the game.
+##### 关闭游戏
+为了关闭这个游戏，我们需要主场账户名和挑战者账户名来标识这个游戏。
+
 ```cpp
 ...
 namespace tic_tac_toe {
@@ -158,8 +162,9 @@ namespace tic_tac_toe {
    ...
 }
 ```
-##### Move
-To make a move, we need host account name and challenger's account name to identify the game. Furthermore, we need to specify who makes this move and the movement he is making.
+##### 移动
+为了做出一个移动，我们需要主账户名和挑战者账户名来标识这个游戏。并且，我们需要指定谁做出了这次移动以及他做出的移动。
+
 ```cpp
 ...
 namespace tic_tac_toe {
@@ -182,10 +187,10 @@ namespace tic_tac_toe {
    ...
 }
 ```
-You can see the final tic_tac_toe.hpp [here](https://github.com/EOSIO/eos/blob/master/contracts/tic_tac_toe/tic_tac_toe.hpp)
+你可以在 [这里](https://github.com/EOSIO/eos/blob/master/contracts/tic_tac_toe/tic_tac_toe.hpp)看到最终的 tic_tac_toe.hpp
 
-### Main
-Let's open tic_tac_toe.cpp and setup the boilerplate
+### 主函数
+让我们打开`tic_tac_toe.cpp` 并且填充这个模版。
 ```cpp
 #include "tic_tac_toe.hpp"
 using namespace eosio;
@@ -204,8 +209,9 @@ extern "C" {
 } // extern "C"
 ```
 
-#### Action handler
-We want tic_tac_toe contract to only react to actions sent to the `tic.tac.toe` account and react differently according to the type of the action. Let's add an impl struct with overloaded 'on' methods taking the different action types (this may seem like overkill for this example, but you will see this pattern employed in other contracts that you can extend, like currency):
+#### 动作处理器
+我们想 `tic_tac_toe` 这个合约只与发送到 `tic.tac.toe` 这个账户的动作交互并且根据动作类型做出不同表现。让我们添加一个`impl`结构，这个结构根据'on'重载方法使用不同动作类型（对于这个例子来说，这可能看起来有些过分，但是您会看到这种模式可用于您可以扩展的其他合约，如`currency`这个合约）：
+
 ```cpp
 using namespace eosio;
 namespace tic_tac_toe {
@@ -242,9 +248,10 @@ extern "C" {
 } // extern "C"
 ```
 
-Notice that we use `unpack_action_data<T>()` before passing it to specific handler, `unpack_action_data<T>()` is converting the action that the contract receives to `struct T`. 
+注意我们在将其传递到一个具体的处理器之前使用了 `unpack_action_data<T>()`，`unpack_action_data<T>()`是将合约接收到的动作转换为`struct T`。
 
-To make things tidy, we will encapsulate the action handlers inside `struct impl`:
+为了使事情变得整洁，我们将封装动作处理程序在`struct impl`中：
+
 ```cpp
 ...
 struct impl {
@@ -285,12 +292,14 @@ struct impl {
 ...
 ```
 
-#### Create Action Handler
-For the create action handler, we want to:
-1. Ensure that the action has signature from the host
-2. Ensure that the challenger and host are not the same player
-3. Ensure that there is no existing game
-4. Store the newly created game into the db
+#### 创建动作处理器
+对于创建游戏动作处理器，我们想：
+
+1. 确保该操作具有来自主场的签名
+2. 确保挑战者和主场不是同一个玩家
+3. 确保没有现有的游戏
+4. 将新创建的游戏存储到数据库中
+
 ```cpp
 struct impl {
    ...
@@ -318,13 +327,15 @@ struct impl {
 
 ```
 
-#### Restart Action Handler
-For the restart action handler, we want to:
-1. Ensure that the action has signature from the host/ challenger
-2. Ensure that the game exists
-3. Ensure that the restart action is done by host/ challenger
-4. Reset the game
-5. Store the updated game to the db
+#### 重启动作处理器
+对于重新启动操作处理程序，我们希望：
+
+1. 确保该动作来自主场/挑战者签名
+2. 确保游戏存在
+3. 确保重新启动操作由主场/挑战者完成
+4. 重置游戏
+5. 将更新的游戏存储到数据库
+
 ```cpp
 struct impl {
    ...
@@ -353,11 +364,13 @@ struct impl {
 
 ```
 
-#### Close Action Handler
-For the close action handler, we want to:
-1. Ensure that the action has signature from the host
-2. Ensure that the game exists
-3. Remove the game from the db
+#### 关闭动作处理器
+对于关闭操作处理程序，我们希望：
+
+1. 确保该操作具有来自主场的签名
+2. 确保游戏存在
+3. 从数据库中删除游戏
+
 ```cpp
 struct impl {
    ...
@@ -381,18 +394,20 @@ struct impl {
 
 ```
 
-#### Move Action Handler
-For the move action handler, we want to:
-1. Ensure that the action has signature from the host/ challenger
-2. Ensure that the game exists
-3. Ensure that the game is not finished yet
-4. Ensure that the move action is done by host/ challenger
-5. Ensure that this is the right user's turn
-6. Verify movement is valid
-7. Update board with the new move
-8. Change the move_turn to the other player
-9. Determine if there is a winner
-10. Store the updated game to the db
+#### 移动动作处理器
+对于移动操作处理程序，我们希望：
+
+1. 确保该动作来自主场/挑战者签名
+2. 确保游戏存在
+3. 确保游戏尚未完成
+4. 确保移动操作由主场/挑战者完成
+5. 确保这是正确的用户轮次
+6. 验证移动是否有效
+7. 用新动作更新棋局
+8. 将move_turn更改为其他玩家
+9. 确定是否有赢家
+10. 将更新的游戏存储到数据库
+
 ```cpp
 struct impl {
    ...
@@ -442,8 +457,8 @@ struct impl {
 }
 
 ```
-#### Movement Validation
-Valid movement is defined as movement done inside the board on an empty cell:
+#### 移动验证
+有效的移动被定义为在空白单元格内完成的移动：
 ```cpp
 struct impl {
    ...
@@ -471,8 +486,8 @@ struct impl {
    ...
 }
 ```
-#### Get Winner
-Winner is defined as the first player who succeeds in placing three of their marks in a horizontal, vertical, or diagonal row.
+#### 获取赢家
+赢家被定义为第一位成功将他们的三个标记放置在水平，垂直或对角线上的玩家。
 ```cpp
 struct impl {
    ...
@@ -532,10 +547,12 @@ struct impl {
    ...
 }
 ```
-You can see the final tic_tac_toe.cpp [here](https://github.com/EOSIO/eos/blob/master/contracts/tic_tac_toe/tic_tac_toe.cpp)
-### Creating ABI
-Abi (a.k.a Application Binary Interface) is needed here, so the contract can understand the action that you send as binary.
-Let's open tic_tac_toe.abi and defines the boilerplate here:
+你可以在 [这里](https://github.com/EOSIO/eos/blob/master/contracts/tic_tac_toe/tic_tac_toe.cpp)看到最后的 `tic_tac_toe.cpp`
+### 创建 ABI
+在这里需要 Abi（又名应用程序二进制接口），这样合约才可以理解您以二进制形式发送的操作。
+
+让我们打开 `tic_tac_toe.abi` 并在此处定义样板：
+
 ```json
 {
   "types": [],
@@ -558,13 +575,13 @@ Let's open tic_tac_toe.abi and defines the boilerplate here:
   }, ...],
   "clauses: [...]
 ```
-- types: list of types that can be represented by another data structure or built-in-type (think typedef in c/c++)
-- structs: list of data structures used by the action/ table in the contract
-- actions: list of actions available in the contract
-- tables: list of tables available in the contract
+- types：可以由另一个数据结构或内置类型表示的类型列表（想想c / c ++中的typedef）
+- structs: 合约中的动作/表使用的数据结构列表
+- actions: 合约中可用行动的清单
+- tables: 合约中可用的数据表列表
 
-#### Table ABI
-Remember that in tic_tac_toe.hpp, we create an single index i64 table called games. It stores `game` structure and use `challenger` as the key, which data type is `account_name`. Hence, the abi will be:
+#### 数据表 ABI
+请记住，在 `tic_tac_toe.hpp` 中，我们创建一个名为`games`的索引i64表。 它存储游戏结构并使用挑战者作为关键字，其数据类型为account_name。 因此，abi将是：
 ```json
 {
   ...
@@ -592,8 +609,8 @@ Remember that in tic_tac_toe.hpp, we create an single index i64 table called gam
 }
 ```
 
-#### Actions ABI
-For the actions, we define the actions inside `actions` and the structure of the actions inside `structs`.
+#### 动作 ABI
+对于这些动作，我们定义动作内部的动作和结构内动作的结构。
 ```json
 {
   ...
@@ -661,15 +678,17 @@ For the actions, we define the actions inside `actions` and the structure of the
 }
 ```
 
-### Compile!
-Now we need to compile tic_tac_toe.cpp to create the tic_tac_toe.wast file that we will use to deploy the contract into nodeos. 
+### 编译!
+现在我们需要编译tic_tac_toe.cpp来创建tic_tac_toe.wast文件，我们将使用该文件将合约部署到nodeos中。
 ```bash
 $ eosiocpp -o tic_tac_toe.wast tic_tac_toe.cpp
 ```
 
-### Deploy!
-Now the wast and abi files (tic_tac_toe.wast and tic_tac_toe.abi) are ready. Time to deploy!
-Create a directory (let's call it tic_tac_toe) and copy your generated tic_tac_toe.wast tic_tac_toe.abi files.
+### 部署!
+现在，wast和abi文件（tic_tac_toe.wast和tic_tac_toe.abi）已准备就绪。 部署时间！
+
+创建一个目录（我们称之为tic_tac_toe）并复制您生成的tic_tac_toe.wast tic_tac_toe.abi文件。
+
 ```bash
 $ cleos set contract tic.tac.toe tic_tac_toe
 ```
