@@ -6,8 +6,9 @@ EOS wiki 的中文翻译。
 阅读顺序：
 
 - [x] Glossary
+- [x] Setting Up A Local Environment
 - [x] Programs & Tools
-- [x] Public Testnet  
+- [ ] Public Testnet  
 - [x] Accounts & Permissions
 - [ ] CLI Wallet
 - [ ] Cleos Command Reference
